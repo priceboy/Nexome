@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexome - Find, Rent, or Sell Homes</title>
+
+<!-- SEO Meta -->
+<meta name="description" content="Nexome: Find, rent, or sell homes effortlessly with a smart real estate app. Connect with agents, browse listings, and secure your dream home.">
+<meta name="keywords" content="real estate, rent, buy, sell, homes, property app, agents">
+<meta name="author" content="Nexome">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<!-- Swiper for carousels -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"/>
+
+<style>
+  :root {
+    --primary-color: #e50914; /* Bright Red */
+    --bg-color: #1f1f1f; /* Dark Grey */
+    --text-color: #ffffff;
+    --accent-color: #ff4c4c;
+  }
+  * { box-sizing: border-box; margin:0; padding:0; font-family: 'Roboto', sans-serif;}
+  body { background: var(--bg-color); color: var(--text-color); line-height: 1.6; transition: background 0.3s, color 0.3s;}
+  a { text-decoration: none; color: inherit;}
+  button { cursor: pointer; border: none; background: var(--primary-color); color: #fff; padding: 12px 25px; border-radius: 30px; font-weight: 600; transition: 0.3s; }
+  button:hover { background: var(--accent-color); }
+
+  header {
+    display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; position: sticky; top:0; background: rgba(31,31,31,0.95); z-index: 100;
+  }
+  header h1 { font-size: 1.8rem; color: var(--primary-color);}
+  nav a { margin-left: 25px; font-weight: 500; transition: 0.3s; }
+  nav a:hover, nav a.active { color: var(--accent-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 4px; }
+
+  .hero { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align:center; padding: 100px 20px; background: linear-gradient(90deg, #2a2a2a, #1f1f1f);}
+  .hero h2 { font-size: 2.5rem; margin-bottom: 15px; }
+  .hero p { font-size: 1.2rem; margin-bottom: 25px; max-width: 700px; }
+  .hero img { max-width: 400px; margin-top: 30px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+  .hero-buttons { display:flex; gap:15px; margin-top:20px; flex-wrap:wrap; justify-content:center;}
+
+  section { padding: 80px 20px; }
+  .section-title { text-align:center; font-size:2rem; margin-bottom:40px; color: var(--primary-color); }
+
+  .features { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; }
+  .feature-card { background: #2a2a2a; border-radius: 20px; padding: 30px; width: 300px; text-align:center; transition: 0.3s; }
+  .feature-card:hover { transform: translateY(-10px); box-shadow: 0 10px 25px rgba(0,0,0,0.5);}
+  .feature-card img { width: 120px; margin-bottom: 20px; border-radius: 20px;}
+  .feature-card h3 { margin-bottom: 15px; font-size: 1.4rem; color: var(--primary-color);}
+  .feature-card p { font-size: 1rem; color: #ccc;}
+
+  .gallery { max-width: 1200px; margin: 0 auto; }
+  .swiper { padding: 40px 0; }
+  .swiper-slide {
+    background: #2a2a2a;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    border-radius:20px;
+    overflow:hidden;
+    padding:20px;
+  }
+  .swiper-slide img {
+    max-width: 300px;   /* smaller width */
+    max-height: 600px;  /* limit height */
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+  }
+
+  .cta-section { text-align:center; padding: 80px 20px; background: #2a2a2a; border-radius: 30px; margin: 40px 20px;}
+  .cta-section h2 { font-size: 2rem; margin-bottom: 25px; color: var(--primary-color);}
+  .cta-section button { font-size: 1.1rem; margin: 5px; }
+
+  footer { text-align:center; padding: 40px 20px; background: #1a1a1a; font-size:0.9rem; color:#777; }
+
+  /* Floating Download Button */
+  .floating-download {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    background: var(--primary-color);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 30px;
+    font-weight: bold;
+    z-index: 200;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+  }
+  .floating-download:hover { background: var(--accent-color); }
+
+  /* Dark mode toggle */
+  #darkModeToggle {
+    margin-left: 15px;
+    background: transparent;
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    border: 2px solid var(--primary-color);
+    padding: 6px 12px;
+    border-radius: 50%;
+  }
+  #darkModeToggle:hover { background: var(--primary-color); color:#fff; }
+
+  /* Light mode */
+  body.light { background:#fff; color:#000; }
+  body.light header { background:#f9f9f9; }
+  body.light .feature-card, body.light .cta-section, body.light .swiper-slide { background:#f1f1f1; }
+  body.light nav a.active, body.light nav a:hover { color: var(--primary-color); border-color: var(--primary-color); }
+
+  @media (max-width: 900px) {
+    .features { flex-direction: column; align-items:center; }
+    .hero h2 { font-size:2rem; }
+    .hero img { max-width:300px;}
+  }
+  @media (max-width: 600px) {
+    header { flex-direction: column; text-align: center; }
+    nav a { margin: 10px; display: inline-block; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Nexome</h1>
+  <nav>
+    <a href="#features">Features</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#download">Download</a>
+  </nav>
+  <button id="darkModeToggle" aria-label="Toggle dark mode">🌙</button>
+</header>
+
+<section class="hero">
+  <h2>Find, Rent, or Sell Homes Effortlessly</h2>
+  <p>Discover a smarter way to manage your property, connect with agents, and find your dream home—all in one powerful app.</p>
+  <div class="hero-buttons">
+    <button aria-label="See Nexome in action" onclick="window.location='#download'">See It in Action</button>
+    <button aria-label="Learn more about Nexome" style="background:transparent; border:2px solid var(--primary-color);" onclick="window.location='#features'">Learn More</button>
+  </div>
+  <img src="https://i.imgur.com/c8wv3op.png" alt="Nexome App Mockup" loading="lazy">
+</section>
+
+<section id="features">
+  <h2 class="section-title">Nexome Features</h2>
+  <div class="features">
+    <div class="feature-card">
+      <img src="https://i.imgur.com/dsqIo25.png" alt="Home Owners" loading="lazy">
+      <h3>Home Owners</h3>
+      <p>List your properties in seconds, manage bookings, and reach thousands of buyers and renters instantly.</p>
+    </div>
+    <div class="feature-card">
+      <img src="https://i.imgur.com/JXPvehT.jpeg" alt="Real Estate Agents" loading="lazy">
+      <h3>Real Estate Agents</h3>
+      <p>Connect with clients, manage listings, and close deals faster than ever, directly from your dashboard.</p>
+    </div>
+    <div class="feature-card">
+      <img src="https://i.imgur.com/IAJ2QTe.jpeg" alt="Home Finders" loading="lazy">
+      <h3>Home Finders</h3>
+      <p>Browse verified listings, filter by your needs, and message owners or agents instantly to secure your next home.</p>
+    </div>
+  </div>
+</section>
+
+<section id="gallery">
+  <h2 class="section-title">App Gallery</h2>
+  <div class="gallery">
+    <div class="swiper mySwiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide"><img src="https://i.imgur.com/c8wv3op.png" alt="Sign up page" loading="lazy"></div>
+        <div class="swiper-slide"><img src="https://i.imgur.com/16o4oDJ.png" alt="user page" loading="lazy"></div>
+        <div class="swiper-slide"><img src="https://i.imgur.com/WKwPsjG.png" alt="Screenshot 3" loading="lazy"></div>
+        
+      </div>
+      <div class="swiper-pagination"></div>
+    </div>
+  </div>
+</section>
+
+<section id="download" class="cta-section">
+  <h2>Get Nexome Today</h2>
+  <p>Join thousands of users finding their perfect home with Nexome.</p>
+  <button aria-label="Comming soon on Android and ios" onclick="window.location.href='https://play.google.com/'">Download for Android</button>
+ 
+</section>
+
+<footer>
+  &copy; 2025 Nexome. All Rights Reserved.
+</footer>
+
+<!-- Floating Download Button -->
+<a href="#download" class="floating-download" aria-label="Quick download link">⬇ Download App</a>
+
+<!-- Swiper JS -->
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+<script>
+  const swiper = new Swiper('.mySwiper', {
+    loop: true,
+    slidesPerView: 1,
+    spaceBetween: 30,
+    pagination: { el: '.swiper-pagination', clickable: true },
+    autoplay: { delay: 3000 },
+  });
+
+  // Dark mode toggle
+  document.getElementById("darkModeToggle").onclick = () => {
+    document.body.classList.toggle("light");
+  };
+
+  // Nav highlight on scroll
+  const sections = document.querySelectorAll("section");
+  const navLinks = document.querySelectorAll("nav a");
+  window.addEventListener("scroll", () => {
+    let current = "";
+    sections.forEach(sec => {
+      const top = window.scrollY;
+      const offset = sec.offsetTop - 150;
+      const height = sec.offsetHeight;
+      if(top >= offset && top < offset + height) {
+        current = sec.getAttribute("id");
+      }
+    });
+    navLinks.forEach(link => {
+      link.classList.remove("active");
+      if(link.getAttribute("href").includes(current)) {
+        link.classList.add("active");
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
