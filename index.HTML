@@ -1,235 +1,882 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexome - Find, Rent, or Sell Homes</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Nexome — Modern Real Estate & Payments</title>
+  <meta name="description" content="Nexome — Find, rent or sell homes. Modern UI, gallery, and a built-in payment panel for CashApp, Venmo, and Bank Transfer." />
+  <meta name="author" content="Nexome" />
 
-<!-- SEO Meta -->
-<meta name="description" content="Nexome: Find, rent, or sell homes effortlessly with a smart real estate app. Connect with agents, browse listings, and secure your dream home.">
-<meta name="keywords" content="real estate, rent, buy, sell, homes, property app, agents">
-<meta name="author" content="Nexome">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-<!-- Swiper for carousels -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"/>
+  <!-- Swiper (for gallery) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css"/>
 
-<style>
-  :root {
-    --primary-color: #e50914; /* Bright Red */
-    --bg-color: #1f1f1f; /* Dark Grey */
-    --text-color: #ffffff;
-    --accent-color: #ff4c4c;
-  }
-  * { box-sizing: border-box; margin:0; padding:0; font-family: 'Roboto', sans-serif;}
-  body { background: var(--bg-color); color: var(--text-color); line-height: 1.6; transition: background 0.3s, color 0.3s;}
-  a { text-decoration: none; color: inherit;}
-  button { cursor: pointer; border: none; background: var(--primary-color); color: #fff; padding: 12px 25px; border-radius: 30px; font-weight: 600; transition: 0.3s; }
-  button:hover { background: var(--accent-color); }
+  <!-- Icons (using simple SVG inline later) -->
 
-  header {
-    display: flex; justify-content: space-between; align-items: center; padding: 20px 50px; position: sticky; top:0; background: rgba(31,31,31,0.95); z-index: 100;
-  }
-  header h1 { font-size: 1.8rem; color: var(--primary-color);}
-  nav a { margin-left: 25px; font-weight: 500; transition: 0.3s; }
-  nav a:hover, nav a.active { color: var(--accent-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 4px; }
+  <style>
+    /* ============================
+       BASE / THEME VARIABLES
+       ============================ */
+    :root{
+      --bg: #f7fafc;
+      --card: #ffffff;
+      --muted: #64748b;
+      --text: #0f172a;
+      --brand: #0d6efd; /* primary */
+      --accent: #00c9a7;
+      --glass: rgba(255,255,255,0.55);
+      --radius: 14px;
+      --shadow-sm: 0 4px 14px rgba(12,20,44,0.06);
+      --shadow-md: 0 10px 30px rgba(12,20,44,0.09);
+      --max-width: 1200px;
+      --nav-height: 64px;
+      --transition: 250ms cubic-bezier(.2,.9,.3,1);
+      --phone-frame: linear-gradient(180deg,#f8fafc,#eef2ff);
+    }
 
-  .hero { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align:center; padding: 100px 20px; background: linear-gradient(90deg, #2a2a2a, #1f1f1f);}
-  .hero h2 { font-size: 2.5rem; margin-bottom: 15px; }
-  .hero p { font-size: 1.2rem; margin-bottom: 25px; max-width: 700px; }
-  .hero img { max-width: 400px; margin-top: 30px; border-radius: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
-  .hero-buttons { display:flex; gap:15px; margin-top:20px; flex-wrap:wrap; justify-content:center;}
+    /* Dark mode */
+    body.dark{
+      --bg: #071028;
+      --card: #0b1320;
+      --muted: #94a3b8;
+      --text: #e6eef8;
+      --glass: rgba(10,16,26,0.6);
+      --shadow-sm: 0 6px 18px rgba(2,6,23,0.6);
+      --shadow-md: 0 12px 40px rgba(2,6,23,0.7);
+      --phone-frame: linear-gradient(180deg,#071028,#061426);
+    }
 
-  section { padding: 80px 20px; }
-  .section-title { text-align:center; font-size:2rem; margin-bottom:40px; color: var(--primary-color); }
+    /* ============================
+       GLOBAL
+       ============================ */
+    * { box-sizing: border-box; }
+    html,body { height:100%; }
+    body{
+      margin:0;
+      font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      background:var(--bg);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      transition: background var(--transition), color var(--transition);
+      line-height:1.45;
+    }
+    a { color:inherit; text-decoration:none; }
+    img { display:block; max-width:100%; height:auto; }
 
-  .features { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; }
-  .feature-card { background: #2a2a2a; border-radius: 20px; padding: 30px; width: 300px; text-align:center; transition: 0.3s; }
-  .feature-card:hover { transform: translateY(-10px); box-shadow: 0 10px 25px rgba(0,0,0,0.5);}
-  .feature-card img { width: 120px; margin-bottom: 20px; border-radius: 20px;}
-  .feature-card h3 { margin-bottom: 15px; font-size: 1.4rem; color: var(--primary-color);}
-  .feature-card p { font-size: 1rem; color: #ccc;}
+    /* Container */
+    .container { max-width: var(--max-width); margin:0 auto; padding: 24px; }
 
-  .gallery { max-width: 1200px; margin: 0 auto; }
-  .swiper { padding: 40px 0; }
-  .swiper-slide {
-    background: #2a2a2a;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    border-radius:20px;
-    overflow:hidden;
-    padding:20px;
-  }
-  .swiper-slide img {
-    max-width: 300px;   /* smaller width */
-    max-height: 600px;  /* limit height */
-    width: auto;
-    height: auto;
-    object-fit: contain;
-    border-radius: 20px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-  }
+    /* ============================
+       HEADER / NAV
+       ============================ */
+    header.site-header{
+      position: sticky; top:0; z-index:1200;
+      backdrop-filter: blur(8px);
+      background: var(--glass);
+      border-bottom: 1px solid rgba(0,0,0,0.04);
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-wrap {
+      height: var(--nav-height);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+    }
+    .brand {
+      display:flex; align-items:center; gap:12px;
+    }
+    .brand .logo {
+      width:44px; height:44px; border-radius:10px;
+      background: linear-gradient(135deg,var(--brand), #6610f2);
+      display:grid; place-items:center; color:#fff; font-weight:700;
+      box-shadow: var(--shadow-sm);
+    }
+    .brand h1 { font-size:1.125rem; margin:0; letter-spacing:0.2px; color:var(--text);}
+    nav.main-nav { display:flex; gap:20px; align-items:center; }
+    nav.main-nav a { font-weight:600; color:var(--muted); padding:8px 10px; border-radius:8px; transition: all var(--transition); }
+    nav.main-nav a:hover, nav.main-nav a.active { color:var(--brand); background: rgba(13,110,253,0.06); }
 
-  .cta-section { text-align:center; padding: 80px 20px; background: #2a2a2a; border-radius: 30px; margin: 40px 20px;}
-  .cta-section h2 { font-size: 2rem; margin-bottom: 25px; color: var(--primary-color);}
-  .cta-section button { font-size: 1.1rem; margin: 5px; }
+    .header-actions { display:flex; align-items:center; gap:12px; }
 
-  footer { text-align:center; padding: 40px 20px; background: #1a1a1a; font-size:0.9rem; color:#777; }
+    /* Hamburger for mobile */
+    .hamburger { display:none; background:transparent; border:none; padding:8px; border-radius:10px; }
+    .hamburger:focus { outline:2px solid rgba(13,110,253,0.25); }
 
-  /* Floating Download Button */
-  .floating-download {
-    position: fixed;
-    bottom: 20px; right: 20px;
-    background: var(--primary-color);
-    color: #fff;
-    padding: 12px 20px;
-    border-radius: 30px;
-    font-weight: bold;
-    z-index: 200;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-  }
-  .floating-download:hover { background: var(--accent-color); }
+    /* ============================
+       HERO
+       ============================ */
+    .hero {
+      display:grid;
+      grid-template-columns: 1fr 420px;
+      gap: 40px;
+      align-items:center;
+      padding: 56px 0;
+    }
 
-  /* Dark mode toggle */
-  #darkModeToggle {
-    margin-left: 15px;
-    background: transparent;
-    color: var(--primary-color);
-    font-size: 1.2rem;
-    border: 2px solid var(--primary-color);
-    padding: 6px 12px;
-    border-radius: 50%;
-  }
-  #darkModeToggle:hover { background: var(--primary-color); color:#fff; }
+    .hero-left h2 {
+      font-size:2.6rem;
+      margin:0 0 12px 0;
+      line-height:1.02;
+      color:var(--text);
+    }
+    .hero-left p { color:var(--muted); font-size:1.05rem; max-width:680px; margin-bottom:18px; }
+    .cta-row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+    .btn {
+      display:inline-flex; align-items:center; gap:10px;
+      padding:12px 18px; border-radius:12px; font-weight:600;
+      transition:transform var(--transition), box-shadow var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-primary { background: linear-gradient(90deg,var(--brand), #6610f2); color:white; border:none; }
+    .btn-primary:hover { transform:translateY(-4px); box-shadow: var(--shadow-md); }
+    .btn-ghost { background:transparent; border: 1px solid rgba(0,0,0,0.06); color:var(--text); }
 
-  /* Light mode */
-  body.light { background:#fff; color:#000; }
-  body.light header { background:#f9f9f9; }
-  body.light .feature-card, body.light .cta-section, body.light .swiper-slide { background:#f1f1f1; }
-  body.light nav a.active, body.light nav a:hover { color: var(--primary-color); border-color: var(--primary-color); }
+    .hero-right {
+      display:flex; justify-content:center; align-items:center;
+      min-height:360px;
+    }
+    .device-stack { width:320px; position:relative; }
+    .phone-frame {
+      width:220px; height:460px; border-radius:30px;
+      background:var(--phone-frame); padding:18px; box-shadow: var(--shadow-md);
+      display:flex; justify-content:center; align-items:center;
+      margin:0 auto;
+    }
+    .phone-frame img { width:188px; height:100%; object-fit:cover; border-radius:14px; }
 
-  @media (max-width: 900px) {
-    .features { flex-direction: column; align-items:center; }
-    .hero h2 { font-size:2rem; }
-    .hero img { max-width:300px;}
-  }
-  @media (max-width: 600px) {
-    header { flex-direction: column; text-align: center; }
-    nav a { margin: 10px; display: inline-block; }
-  }
-</style>
+    /* Sub-features row */
+    .mini-features { display:flex; gap:10px; margin-top:18px; flex-wrap:wrap; }
+
+    .mini-card {
+      background:var(--card); padding:10px 12px; border-radius:12px; box-shadow:var(--shadow-sm);
+      display:flex; gap:10px; align-items:center; min-width:140px;
+    }
+    .mini-card svg { width:20px; height:20px; opacity:0.9; }
+
+    /* ============================
+       FEATURES GRID
+       ============================ */
+    .features {
+      display:grid; gap:20px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+    .feature {
+      background:var(--card); border-radius:16px; padding:22px; box-shadow: var(--shadow-sm);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .feature:hover { transform: translateY(-8px); box-shadow: var(--shadow-md); }
+    .feature h3 { margin:0 0 8px 0; color:var(--brand); }
+    .feature p { color:var(--muted); margin:0; font-size:0.95rem; }
+
+    /* ============================
+       GALLERY - Compact Phone Mockups
+       ============================ */
+    .gallery {
+      display:flex; flex-direction:column; gap:16px; align-items:center;
+      max-width:900px; margin:0 auto;
+    }
+    .gallery-grid { display:flex; gap:18px; justify-content:center; flex-wrap:wrap; }
+    .phone-mock {
+      width:200px; display:grid; place-items:center;
+      border-radius:28px; padding:12px; background:linear-gradient(180deg,#fff,#f3f6ff);
+      box-shadow: var(--shadow-sm);
+      transform-origin:center center;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .phone-mock:hover { transform: translateY(-10px); box-shadow: var(--shadow-md); }
+    .phone-inner {
+      width:160px; height:360px; border-radius:18px; overflow:hidden; background:#fff;
+      display:flex; align-items:center; justify-content:center; position:relative;
+    }
+    .phone-inner img { width:100%; height:100%; object-fit:cover; }
+
+    /* Pagination helpers for mobile swiper */
+    .swiper-container { width:100%; padding:10px 0; }
+    .swiper-button { display:none; }
+
+    /* ============================
+       CTA / PAYMENTS PANEL
+       ============================ */
+    .payments {
+      display:grid; grid-template-columns: 1fr 420px; gap:28px; align-items:start;
+      margin-top:18px;
+    }
+
+    .pay-card {
+      background:var(--card); border-radius:16px; padding:18px; box-shadow: var(--shadow-sm);
+    }
+
+    .pay-form label { display:block; font-size:0.85rem; color:var(--muted); margin-bottom:6px; }
+    .pay-form input, .pay-form select, .pay-form textarea {
+      width:100%; padding:10px 12px; border-radius:10px; border:1px solid rgba(15,23,42,0.06);
+      margin-bottom:12px; background:transparent; color:var(--text);
+    }
+    .pay-actions { display:flex; gap:10px; align-items:center; justify-content:flex-start; margin-top:8px; }
+
+    .copy-btn {
+      background:transparent; border:1px dashed rgba(0,0,0,0.06); padding:8px 10px; border-radius:10px; cursor:pointer;
+    }
+
+    /* payment log */
+    .log {
+      margin-top:12px; border-radius:10px; overflow:hidden; max-height:300px; background: linear-gradient(180deg,#fff,#fbfdff);
+      box-shadow: var(--shadow-sm);
+    }
+    .log ul { list-style:none; padding:10px; margin:0; overflow:auto; height:280px; }
+    .log li { display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid rgba(0,0,0,0.04); align-items:center; gap:8px; }
+    .log li:last-child { border-bottom:none; }
+
+    /* right side panel - quick info */
+    .info-panel { position:sticky; top:84px; display:flex; flex-direction:column; gap:12px; }
+    .info-card { background:var(--card); padding:14px; border-radius:12px; box-shadow:var(--shadow-sm); }
+
+    /* CTA download */
+    .download-badges { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
+    .badge { display:inline-flex; gap:8px; align-items:center; background:var(--card); padding:10px 14px; border-radius:10px; box-shadow:var(--shadow-sm); font-weight:700; }
+
+    /* ============================
+       FOOTER
+       ============================ */
+    footer.site-footer { margin-top:40px; padding:28px; text-align:center; color:var(--muted); }
+
+    /* RESPONSIVE */
+    @media (max-width:1100px){
+      .hero { grid-template-columns: 1fr 340px; }
+      .payments { grid-template-columns: 1fr; }
+      .hero-right { min-height:320px; }
+      .nav-wrap { padding:8px 0; }
+    }
+    @media (max-width:800px){
+      nav.main-nav { display:none; }
+      .hamburger { display:inline-flex; }
+      .hero { grid-template-columns:1fr; text-align:center; gap:24px; }
+      .hero-right { order:-1; }
+      .device-stack { margin-bottom:8px; }
+      .brand h1 { display:none; }
+      .phone-mock { width:160px; }
+      .phone-inner { height:320px; }
+    }
+
+    /* small utility */
+    .muted { color:var(--muted); }
+    .small { font-size:0.85rem; }
+    .pill { padding:6px 10px; border-radius:999px; background:rgba(0,0,0,0.03); font-weight:600; }
+    .flex { display:flex; gap:12px; align-items:center; }
+    .center { display:grid; place-items:center; }
+    .hidden { display:none !important; }
+
+    /* TOAST */
+    .toast {
+      position: fixed; right:20px; bottom:20px; background:linear-gradient(90deg,var(--brand), #6610f2);
+      color:white; padding:12px 18px; border-radius:10px; box-shadow:var(--shadow-md);
+      transform: translateY(18px); opacity:0; transition: opacity 220ms ease, transform 220ms ease;
+    }
+    .toast.show { transform: translateY(0); opacity:1; }
+
+  </style>
 </head>
 <body>
 
-<header>
-  <h1>Nexome</h1>
-  <nav>
-    <a href="#features">Features</a>
-    <a href="#gallery">Gallery</a>
-    <a href="#download">Download</a>
-  </nav>
-  <button id="darkModeToggle" aria-label="Toggle dark mode">🌙</button>
-</header>
-
-<section class="hero">
-  <h2>Find, Rent, or Sell Homes Effortlessly</h2>
-  <p>Discover a smarter way to manage your property, connect with agents, and find your dream home—all in one powerful app.</p>
-  <div class="hero-buttons">
-    <button aria-label="See Nexome in action" onclick="window.location='#download'">See It in Action</button>
-    <button aria-label="Learn more about Nexome" style="background:transparent; border:2px solid var(--primary-color);" onclick="window.location='#features'">Learn More</button>
-  </div>
-  <img src="https://i.imgur.com/c8wv3op.png" alt="Nexome App Mockup" loading="lazy">
-</section>
-
-<section id="features">
-  <h2 class="section-title">Nexome Features</h2>
-  <div class="features">
-    <div class="feature-card">
-      <img src="https://i.imgur.com/dsqIo25.png" alt="Home Owners" loading="lazy">
-      <h3>Home Owners</h3>
-      <p>List your properties in seconds, manage bookings, and reach thousands of buyers and renters instantly.</p>
-    </div>
-    <div class="feature-card">
-      <img src="https://i.imgur.com/JXPvehT.jpeg" alt="Real Estate Agents" loading="lazy">
-      <h3>Real Estate Agents</h3>
-      <p>Connect with clients, manage listings, and close deals faster than ever, directly from your dashboard.</p>
-    </div>
-    <div class="feature-card">
-      <img src="https://i.imgur.com/IAJ2QTe.jpeg" alt="Home Finders" loading="lazy">
-      <h3>Home Finders</h3>
-      <p>Browse verified listings, filter by your needs, and message owners or agents instantly to secure your next home.</p>
-    </div>
-  </div>
-</section>
-
-<section id="gallery">
-  <h2 class="section-title">App Gallery</h2>
-  <div class="gallery">
-    <div class="swiper mySwiper">
-      <div class="swiper-wrapper">
-        <div class="swiper-slide"><img src="https://i.imgur.com/c8wv3op.png" alt="Sign up page" loading="lazy"></div>
-        <div class="swiper-slide"><img src="https://i.imgur.com/16o4oDJ.png" alt="user page" loading="lazy"></div>
-        <div class="swiper-slide"><img src="https://i.imgur.com/WKwPsjG.png" alt="Screenshot 3" loading="lazy"></div>
-        
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container nav-wrap" role="navigation" aria-label="Main navigation">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">NX</div>
+        <h1>Nexome</h1>
       </div>
-      <div class="swiper-pagination"></div>
+
+      <nav class="main-nav" aria-label="Primary">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#gallery" class="nav-link">Gallery</a>
+        <a href="#payments" class="nav-link">Payments</a>
+        <a href="#download" class="nav-link">Download</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="pill small muted">Startup • Real Estate</div>
+        <button id="themeToggle" class="btn btn-ghost" aria-pressed="false" title="Toggle theme">🌙</button>
+        <button class="hamburger" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+          <svg width="22" height="14" viewBox="0 0 22 14" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect y="1" width="22" height="2" rx="1" fill="currentColor"></rect>
+            <rect y="6" width="22" height="2" rx="1" fill="currentColor"></rect>
+            <rect y="11" width="22" height="2" rx="1" fill="currentColor"></rect>
+          </svg>
+        </button>
+      </div>
     </div>
-  </div>
-</section>
 
-<section id="download" class="cta-section">
-  <h2>Get Nexome Today</h2>
-  <p>Join thousands of users finding their perfect home with Nexome.</p>
-  <button aria-label="Comming soon on Android and ios" onclick="window.location.href='https://play.google.com/'">Download for Android</button>
- 
-</section>
+    <!-- MOBILE NAV (collapsible) -->
+    <div id="mobileNav" class="container hidden" aria-hidden="true">
+      <nav style="display:flex; flex-direction:column; gap:10px; padding:12px 0;">
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#gallery" class="nav-link">Gallery</a>
+        <a href="#payments" class="nav-link">Payments</a>
+        <a href="#download" class="nav-link">Download</a>
+      </nav>
+    </div>
+  </header>
 
-<footer>
-  &copy; 2025 Nexome. All Rights Reserved.
-</footer>
+  <!-- MAIN CONTENT -->
+  <main class="container" id="top">
 
-<!-- Floating Download Button -->
-<a href="#download" class="floating-download" aria-label="Quick download link">⬇ Download App</a>
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero-left">
+        <h2 id="heroTitle">Find, Rent, or Sell Homes — smarter, faster, friendlier.</h2>
+        <p>Browse verified listings, connect directly with agents or homeowners, and manage property activity from one elegant app. Designed for speed and clarity — whether you're a homeowner, agent, or home-finder.</p>
 
-<!-- Swiper JS -->
-<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
-<script>
-  const swiper = new Swiper('.mySwiper', {
-    loop: true,
-    slidesPerView: 1,
-    spaceBetween: 30,
-    pagination: { el: '.swiper-pagination', clickable: true },
-    autoplay: { delay: 3000 },
-  });
+        <div class="cta-row">
+          <button class="btn btn-primary" onclick="document.querySelector('#download').scrollIntoView({behavior:'smooth'})">Get the App</button>
+          <button class="btn btn-ghost" onclick="document.querySelector('#features').scrollIntoView({behavior:'smooth'})">Explore Features</button>
+          <div class="mini-features" role="list">
+            <div class="mini-card" role="listitem"><svg viewBox="0 0 24 24" fill="none"><path d="M3 12h18" stroke="#0d6efd" stroke-width="2" stroke-linecap="round"/></svg><span class="small muted">Fast Listings</span></div>
+            <div class="mini-card" role="listitem"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#00c9a7" stroke-width="2"/></svg><span class="small muted">Verified</span></div>
+          </div>
+        </div>
+      </div>
 
-  // Dark mode toggle
-  document.getElementById("darkModeToggle").onclick = () => {
-    document.body.classList.toggle("light");
-  };
+      <div class="hero-right" aria-hidden="false">
+        <div class="device-stack" aria-hidden="true">
+          <div class="phone-frame" role="img" aria-label="App screenshot">
+            <img src="https://i.imgur.com/c8wv3op.png" alt="Nexome app mockup">
+          </div>
+        </div>
+      </div>
+    </section>
 
-  // Nav highlight on scroll
-  const sections = document.querySelectorAll("section");
-  const navLinks = document.querySelectorAll("nav a");
-  window.addEventListener("scroll", () => {
-    let current = "";
-    sections.forEach(sec => {
-      const top = window.scrollY;
-      const offset = sec.offsetTop - 150;
-      const height = sec.offsetHeight;
-      if(top >= offset && top < offset + height) {
-        current = sec.getAttribute("id");
+    <!-- FEATURES -->
+    <section id="features" aria-labelledby="featuresTitle">
+      <h2 id="featuresTitle" class="section-title" style="text-align:center; color:var(--brand); margin-bottom:22px;">Platform Features</h2>
+      <div class="features" role="list">
+        <div class="feature" role="listitem">
+          <h3>Owner Dashboard</h3>
+          <p>List properties, manage bookings, track viewings, and set availability in seconds with an intuitive dashboard.</p>
+        </div>
+        <div class="feature" role="listitem">
+          <h3>Agent Tools</h3>
+          <p>Agent-specific tools for lead capture, messaging, and smart contract support to help you close deals faster.</p>
+        </div>
+        <div class="feature" role="listitem">
+          <h3>Finder Experience</h3>
+          <p>Powerful filters, saved searches, and instant messaging with owners to make finding a home simple and secure.</p>
+        </div>
+        <div class="feature" role="listitem">
+          <h3>Secure Payments</h3>
+          <p>Quick payment instructions and copy-to-clipboard helpers for CashApp, Venmo, and bank transfers — built for trust.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section id="gallery" aria-labelledby="galleryTitle" style="padding-top:36px;">
+      <h2 id="galleryTitle" class="section-title" style="text-align:center; color:var(--brand);">App Gallery</h2>
+
+      <!-- Compact grid of phone mockups -->
+      <div class="gallery" role="region" aria-label="App screenshots">
+        <div class="gallery-grid" id="galleryGrid">
+          <div class="phone-mock" title="Sign up screen">
+            <div class="phone-inner">
+              <img src="https://i.imgur.com/c8wv3op.png" alt="Sign up page">
+            </div>
+          </div>
+
+          <div class="phone-mock" title="User profile">
+            <div class="phone-inner">
+              <img src="https://i.imgur.com/16o4oDJ.png" alt="User page">
+            </div>
+          </div>
+
+          <div class="phone-mock" title="Listings">
+            <div class="phone-inner">
+              <img src="https://i.imgur.com/WKwPsjG.png" alt="Listings screenshot">
+            </div>
+          </div>
+        </div>
+
+        <!-- Swiper for narrow screens -->
+        <div class="swiper-container hidden" aria-hidden="true">
+          <div class="swiper mySwiper" style="width:260px;">
+            <div class="swiper-wrapper">
+              <div class="swiper-slide"><img src="https://i.imgur.com/c8wv3op.png" alt="Sign up"></div>
+              <div class="swiper-slide"><img src="https://i.imgur.com/16o4oDJ.png" alt="User"></div>
+              <div class="swiper-slide"><img src="https://i.imgur.com/WKwPsjG.png" alt="Listings"></div>
+            </div>
+            <div class="swiper-pagination"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAYMENTS (Main focus) -->
+    <section id="payments" aria-labelledby="paymentsTitle" style="padding-top:36px;">
+      <h2 id="paymentsTitle" class="section-title" style="text-align:center; color:var(--brand);">Payments & Donations</h2>
+
+      <div class="payments" role="region" aria-label="Payments panel">
+        <!-- LEFT: Payment Form / Log -->
+        <div class="pay-card" style="min-height:320px;">
+          <h3 style="margin:0 0 10px 0;">Make a Payment</h3>
+          <p class="muted small" style="margin:0 0 18px 0;">Choose a method, set an amount, and follow the simple instructions. Use copy buttons to quickly copy handles or account numbers.</p>
+
+          <div class="pay-form" id="payForm">
+            <label for="payerName">Your Name</label>
+            <input id="payerName" type="text" placeholder="e.g. Jane Doe" aria-label="Your name" />
+
+            <label for="paymentMethodSelect">Payment Method</label>
+            <select id="paymentMethodSelect" aria-label="Payment method">
+              <option value="cashapp">CashApp</option>
+              <option value="venmo">Venmo</option>
+              <option value="bank">Bank Transfer</option>
+            </select>
+
+            <label for="amountInput">Amount (USD)</label>
+            <input id="amountInput" type="number" min="1" step="0.01" placeholder="Enter amount" aria-label="Amount" />
+
+            <label for="noteInput">Payment Note (optional)</label>
+            <input id="noteInput" type="text" placeholder="e.g. donation, subscription, rent" />
+
+            <div class="pay-actions">
+              <button id="proceedPayBtn" class="btn btn-primary">Proceed</button>
+              <button id="clearBtn" class="btn btn-ghost">Clear</button>
+            </div>
+          </div>
+
+          <div style="margin-top:14px;">
+            <h4 style="margin:0 0 8px 0;">Payment Instructions</h4>
+            <div id="paymentInstructions" style="border-radius:12px; padding:12px; background:linear-gradient(180deg,#ffffff,#fbfdff); box-shadow:var(--shadow-sm);">
+              <!-- dynamic instructions inserted here -->
+              <div id="paymentDetailsInner">
+                <p class="muted small">Select a method and enter an amount to see instructions.</p>
+              </div>
+            </div>
+
+            <!-- Payment history / log -->
+            <div class="log" aria-live="polite" aria-atomic="true">
+              <ul id="paymentLog" role="list" aria-label="Recent payments">
+                <!-- list items dynamically inserted -->
+              </ul>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:10px;">
+              <button id="exportCsvBtn" class="btn btn-ghost">Export CSV</button>
+              <button id="clearHistoryBtn" class="btn btn-ghost">Clear History</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Info panel -->
+        <aside class="info-panel" aria-label="Payment quick info">
+          <div class="info-card">
+            <h4 style="margin:0 0 8px 0;">Quick Links</h4>
+            <div style="display:flex; gap:8px; flex-direction:column;">
+              <a class="small" href="#download">Download the App</a>
+              <a class="small" href="#features">Read Features</a>
+              <a class="small" href="#gallery">View Gallery</a>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <h4 style="margin:0 0 8px 0;">Download</h4>
+            <div class="download-badges">
+              <div class="badge">Play Store</div>
+              <div class="badge">App Store</div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <h4 style="margin:0 0 8px 0;">Support</h4>
+            <p class="muted small" style="margin:0;">Questions about payments? Contact <strong>support@nexome.app</strong> or use the built-in chat (coming soon).</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- CTA DOWNLOAD -->
+    <section id="download" style="padding-top:36px;">
+      <div class="pay-card center" style="padding:30px; margin:30px auto; max-width:900px;">
+        <h2 style="margin:0 0 8px 0;">Get Nexome Today</h2>
+        <p class="muted small" style="margin:0 0 16px 0;">Beautiful, fast, and made for people who need a better way to find homes.</p>
+        <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap;">
+          <button class="btn btn-primary" onclick="toast('Thanks — download coming soon!')">Download for Android</button>
+          <button class="btn btn-ghost" onclick="toast('Thanks — iOS release coming soon!')">Download for iOS</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div style="display:flex; gap:12px; justify-content:center; align-items:center; margin-bottom:10px;">
+        <div class="logo" style="width:36px;height:36px;border-radius:8px; display:grid; place-items:center; background:linear-gradient(90deg,var(--brand), #6610f2); color:white;">NX</div>
+        <div style="text-align:left;">
+          <div style="font-weight:700;">Nexome</div>
+          <div class="muted small">© 2025 Nexome. All rights reserved.</div>
+        </div>
+      </div>
+
+      <div class="muted small">Built with care • Designed for clarity</div>
+    </div>
+  </footer>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+
+  <script>
+    /**************************************************************************
+     * SCRIPT: Interaction, Payments UI, and LocalStorage history
+     *
+     * - Controls theme toggle
+     * - Handles mobile nav toggling
+     * - Controls payment instructions & copy-to-clipboard
+     * - Stores payment history in localStorage (simple simulation)
+     * - CSV export + clear history
+     **************************************************************************/
+
+    // ---------- Utility helpers ----------
+    const el = (sel) => document.querySelector(sel);
+    const els = (sel) => Array.from(document.querySelectorAll(sel));
+
+    function toast(message, ms = 2400) {
+      const t = el('#toast');
+      t.textContent = message;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), ms);
+    }
+
+    // small safe formatter
+    function formatCurrency(n) {
+      n = Number(n);
+      if (isNaN(n)) n = 0;
+      return n.toLocaleString('en-US', { style:'currency', currency:'USD' });
+    }
+
+    // ---------- Theme Toggle ----------
+    const themeToggle = el('#themeToggle');
+    function applyInitialTheme() {
+      const saved = localStorage.getItem('nexome_theme');
+      if (saved === 'dark') {
+        document.body.classList.add('dark');
+        themeToggle.textContent = '☀️';
+        themeToggle.setAttribute('aria-pressed', 'true');
+      }
+    }
+    applyInitialTheme();
+
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.classList.toggle('dark');
+      themeToggle.textContent = isDark ? '☀️' : '🌙';
+      themeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+      localStorage.setItem('nexome_theme', isDark ? 'dark' : 'light');
+    });
+
+    // ---------- Mobile Nav ----------
+    const menuBtn = el('#menuBtn');
+    const mobileNav = el('#mobileNav');
+    menuBtn.addEventListener('click', () => {
+      const open = menuBtn.getAttribute('aria-expanded') === 'true';
+      menuBtn.setAttribute('aria-expanded', (!open).toString());
+      mobileNav.classList.toggle('hidden');
+      mobileNav.setAttribute('aria-hidden', open ? 'true' : 'false');
+    });
+
+    // Close mobile nav on link click (for single page behavior)
+    els('#mobileNav a').forEach(a => a.addEventListener('click', () => {
+      mobileNav.classList.add('hidden');
+      menuBtn.setAttribute('aria-expanded','false');
+      mobileNav.setAttribute('aria-hidden','true');
+    }));
+
+    // ---------- Gallery Swiper (for very small screens) ----------
+    const swiperContainer = document.querySelector('.swiper-container');
+    function setupSwiperForSmall() {
+      if (window.innerWidth <= 800) {
+        swiperContainer.classList.remove('hidden');
+        document.querySelector('.gallery-grid').classList.add('hidden');
+        initSwiper();
+      } else {
+        swiperContainer.classList.add('hidden');
+        document.querySelector('.gallery-grid').classList.remove('hidden');
+      }
+    }
+    window.addEventListener('resize', () => {
+      setupSwiperForSmall();
+    });
+    setupSwiperForSmall();
+
+    function initSwiper() {
+      if (window.mySwiper) return; // already inited
+      window.mySwiper = new Swiper('.mySwiper', {
+        loop: true,
+        slidesPerView: 1,
+        centeredSlides: true,
+        spaceBetween: 20,
+        pagination: { el: '.swiper-pagination', clickable: true },
+        autoplay: { delay: 2800, disableOnInteraction: true },
+      });
+    }
+
+    // ---------- Payment details & copy helpers ----------
+    const handles = {
+      cashapp: { label: 'CashApp', handle: '$GoldenGateEdu', info: 'Open CashApp and send to the handle shown.' },
+      venmo: { label: 'Venmo', handle: '@GoldenGateEdu', info: 'Open Venmo and send to the handle shown.' },
+      bank: { label: 'Bank Transfer', handle: 'Acct: 123456789 | Routing: 987654321', info: 'Use your bank’s transfer interface. Include the account and routing numbers.' }
+    };
+
+    const paymentMethodSelect = el('#paymentMethodSelect');
+    const amountInput = el('#amountInput');
+    const payerName = el('#payerName');
+    const noteInput = el('#noteInput');
+    const proceedPayBtn = el('#proceedPayBtn');
+    const clearBtn = el('#clearBtn');
+    const paymentDetailsInner = el('#paymentDetailsInner');
+    const paymentLogUL = el('#paymentLog');
+    const exportCsvBtn = el('#exportCsvBtn');
+    const clearHistoryBtn = el('#clearHistoryBtn');
+
+    // Render instructions for selected method and amount
+    function renderPaymentInstructions() {
+      const method = paymentMethodSelect.value || 'cashapp';
+      const amount = Number(amountInput.value) || 0;
+      const m = handles[method];
+      const formatted = amount ? formatCurrency(amount) : '—';
+      paymentDetailsInner.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
+          <div>
+            <div style="font-weight:700;">${m.label}</div>
+            <div class="muted small" style="margin-top:6px;">${m.info}</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="small muted">Amount</div>
+            <div style="font-weight:700; font-size:1.05rem;">${formatted}</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px; display:flex; justify-content:space-between; gap:10px; align-items:center;">
+          <div style="background:linear-gradient(180deg,#fff,#fbfdff); padding:10px; border-radius:10px; width:100%;">
+            <div class="small muted">Handle / Account</div>
+            <div style="font-weight:700; margin-top:6px;">${m.handle}</div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            <button class="copy-btn" data-copy="${m.handle}">Copy</button>
+            <button class="copy-btn" id="openAppBtn">Open</button>
+          </div>
+        </div>
+      `;
+
+      // wire up copy buttons
+      const copyBtns = paymentDetailsInner.querySelectorAll('.copy-btn');
+      copyBtns.forEach(b => {
+        b.addEventListener('click', (e) => {
+          const txt = b.getAttribute('data-copy');
+          if (!txt) {
+            // fallback: try inner text
+            navigator.clipboard.writeText(m.handle);
+            toast('Copied to clipboard');
+          } else {
+            navigator.clipboard.writeText(txt).then(() => toast('Copied to clipboard'));
+          }
+        });
+      });
+
+      const openAppBtn = paymentDetailsInner.querySelector('#openAppBtn');
+      if (openAppBtn) {
+        openAppBtn.addEventListener('click', () => {
+          // best-effort heuristics: open app via url scheme or fallback info
+          if (method === 'cashapp') {
+            // cash.app link — not guaranteed on all platforms
+            window.open('https://cash.app', '_blank');
+          } else if (method === 'venmo') {
+            window.open('https://venmo.com', '_blank');
+          } else {
+            toast('Use your bank app or online banking to initiate the transfer.');
+          }
+        });
+      }
+    }
+
+    // Initialize instructions on load
+    renderPaymentInstructions();
+    paymentMethodSelect.addEventListener('change', renderPaymentInstructions);
+    amountInput.addEventListener('input', renderPaymentInstructions);
+
+    // ---------- Payment history handling (localStorage) ----------
+    const STORAGE_KEY = 'nexome_payments_v1';
+
+    function loadHistory() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      try {
+        return raw ? JSON.parse(raw) : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveHistory(history) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+    }
+
+    function addToHistory(record) {
+      const history = loadHistory();
+      history.unshift(record); // add to start
+      if (history.length > 200) history.pop(); // cap
+      saveHistory(history);
+      renderHistory();
+    }
+
+    function renderHistory() {
+      const history = loadHistory();
+      paymentLogUL.innerHTML = '';
+      if (history.length === 0) {
+        paymentLogUL.innerHTML = '<li class="muted small">No payments yet.</li>';
+        return;
+      }
+      history.forEach((r, idx) => {
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <div style="display:flex; flex-direction:column;">
+            <div style="font-weight:700;">${r.methodLabel} • ${r.name || 'Anonymous'}</div>
+            <div class="muted small">${r.note || ''}</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-weight:700;">${formatCurrency(r.amount)}</div>
+            <div class="muted small">${new Date(r.t).toLocaleString()}</div>
+          </div>
+        `;
+        paymentLogUL.appendChild(li);
+      });
+    }
+
+    // Wire proceed button
+    proceedPayBtn.addEventListener('click', () => {
+      const method = paymentMethodSelect.value;
+      const amount = Number(amountInput.value);
+      const name = payerName.value.trim();
+      const note = noteInput.value.trim();
+
+      if (!method) { toast('Please select a payment method'); return; }
+      if (!amount || amount <= 0) { toast('Enter a valid amount'); return; }
+
+      // Simulated "process": add to history and show instructions
+      const record = {
+        t: Date.now(),
+        method,
+        methodLabel: handles[method].label,
+        amount,
+        name,
+        note
+      };
+      addToHistory(record);
+      toast('Payment recorded locally — follow the instructions to complete transfer');
+
+      // Show details prominently
+      renderPaymentInstructions();
+    });
+
+    // clear button
+    clearBtn.addEventListener('click', () => {
+      payerName.value = '';
+      amountInput.value = '';
+      noteInput.value = '';
+      paymentMethodSelect.value = 'cashapp';
+      renderPaymentInstructions();
+    });
+
+    // Export CSV
+    exportCsvBtn.addEventListener('click', () => {
+      const history = loadHistory();
+      if (!history.length) { toast('No history to export'); return; }
+      const csv = [
+        ['timestamp', 'name', 'method', 'amount', 'note'],
+        ...history.map(h => [new Date(h.t).toISOString(), (h.name||''), h.methodLabel, h.amount, (h.note||'')])
+      ].map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+
+      const blob = new Blob([csv], { type:'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `nexome_payments_${new Date().toISOString().slice(0,10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      toast('CSV exported');
+    });
+
+    // Clear history
+    clearHistoryBtn.addEventListener('click', () => {
+      if (!confirm('Clear payment history? This will remove local records.')) return;
+      localStorage.removeItem(STORAGE_KEY);
+      renderHistory();
+      toast('History cleared');
+    });
+
+    // initial render
+    renderHistory();
+
+    // ---------- Scroll highlight for nav ----------
+    const navLinks = els('nav.main-nav a');
+    const sections = els('main section, main > section');
+    function onScrollHighlight() {
+      const y = window.scrollY + 120;
+      let current = '';
+      sections.forEach(s => {
+        const top = s.offsetTop;
+        if (y >= top) current = s.id || s.querySelector('h2')?.id || '';
+      });
+      navLinks.forEach(a => {
+        a.classList.remove('active');
+        if (a.getAttribute('href') && a.getAttribute('href').includes(current)) {
+          a.classList.add('active');
+        }
+      });
+    }
+    window.addEventListener('scroll', onScrollHighlight);
+    onScrollHighlight();
+
+    // Accessibility: keyboard users can use Enter on copy buttons in payment details
+    document.addEventListener('keydown', (e) => {
+      if ((e.key === 'c' || e.key === 'C') && (e.ctrlKey || e.metaKey)) {
+        // ctrl/cmd + c -> copy current handle if visible
+        const copyEl = paymentDetailsInner.querySelector('[data-copy]');
+        if (copyEl) {
+          navigator.clipboard.writeText(copyEl.getAttribute('data-copy'));
+          toast('Copied handle (⌘/Ctrl+C override)');
+        }
       }
     });
-    navLinks.forEach(link => {
-      link.classList.remove("active");
-      if(link.getAttribute("href").includes(current)) {
-        link.classList.add("active");
-      }
-    });
-  });
-</script>
 
+    // Small UX improvement: smooth scroll to anchors
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', (ev) => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          ev.preventDefault();
+          target.scrollIntoView({ behavior:'smooth', block:'start' });
+        }
+      });
+    });
+
+    // Lightweight animation: fade in on load elements
+    window.addEventListener('load', () => {
+      document.querySelectorAll('.feature, .phone-mock, .pay-card, .info-card').forEach((el, idx) => {
+        el.style.opacity = 0;
+        el.style.transform = 'translateY(8px)';
+        setTimeout(() => {
+          el.style.transition = 'all 420ms ease';
+          el.style.opacity = 1;
+          el.style.transform = 'translateY(0)';
+        }, 80 * idx);
+      });
+    });
+
+  </script>
 </body>
 </html>
